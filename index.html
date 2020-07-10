@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <title>Accelerometer Test</title>
+        <style>
+            h1{
+                text-align: center;
+                font-size: 8vw;
+                margin-bottom: 0px;
+            }
+            button{
+                margin: auto;
+                display: block;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                font-size: 3vw;
+            }
+            div{
+                width: 80%;
+                height: 200px;
+                border: 1px solid black;
+                overflow-y: hidden;
+                background-color:#DDDDDD;
+                border-radius: 10px;
+                font-size: 3vw;
+                padding: 10px;
+                text-align: center;
+                margin: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            #console{
+                overflow-y: scroll;
+            }
+            #motionData{
+                height: 60px;
+            }
+            #orientationData{
+                height: 60px;
+            }
+        </style>
+    </head>
+    <body onload="initialize()" allow="accelerometer">
+        <h1>Accelerometer Test</h1>
+        <button id="permButton">Start Accelerometer Demo</button>
+        <div id="motionData"></div>
+        <div id="orientationData"></div>
+        <div id="console"></div>
+    </body>
+    <script>
+        let motionDiv = null;
+        let orientationDiv = null;
+        let consoleDiv = null;
+        let is_running = false;
+
+        function log(message){
+            consoleDiv.innerText += message + "\n";
+        }
+
+        function handleMotion(event){
+            motionDiv.innerText = "X-Axis: " + event.acceleration.x + "\n"
+                            + "Y-Axis: " + event.acceleration.y + "\n"
+                            + "Z-Axis: " + event.acceleration.z + "\n";
+        }
+
+        function handleOrientation(event){
+            orientationDiv.innerText = "Absolute: " + event.absolute + "\n"
+                + "Alpha: " + event.alpha + "\n"
+                + "Beta: " + event.beta + "\n"
+                + "Gamma: " + event.gamma + "\n";
+        }
+
+        function initialize(){
+            motionDiv = document.getElementById("motionData");
+            orientationDiv = document.getElementById("orientationData");
+            consoleDiv = document.getElementById("console");
+            document.getElementById("permButton").addEventListener("click", getAccPermisions);
+        }
+        function getAccPermisions(){
+            if (DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function") {
+                DeviceMotionEvent.requestPermission();
+            }
+
+            if (is_running) {
+                window.removeEventListener("devicemotion", handleMotion);
+                window.removeEventListener("deviceorientation", handleOrientation);
+                document.getElementById("permButton").innerHTML = "Start Accelerometer Demo";
+                is_running = false;
+            } else {
+                window.addEventListener("devicemotion", handleMotion);
+                window.addEventListener("deviceorientation", handleOrientation);
+                document.getElementById("permButton").innerHTML = "Stop Accelerometer Demo";
+                is_running = true;
+            }
+        }
+    </script>
+</html>
