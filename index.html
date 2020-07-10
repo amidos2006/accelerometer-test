@@ -27,9 +27,7 @@
                 margin: auto;
                 margin-top: 10px;
                 margin-bottom: 10px;
-            }
-            #console{
-                overflow-y: scroll;
+                font-family: 'Courier New', Courier, monospace;
             }
         </style>
     </head>
@@ -38,34 +36,51 @@
         <button id="permButton">Start Accelerometer Demo</button>
         <div id="motionData"></div>
         <div id="orientationData"></div>
-        <div id="console"></div>
     </body>
     <script>
         let motionDiv = null;
         let orientationDiv = null;
-        let consoleDiv = null;
         let is_running = false;
 
-        function log(message){
-            consoleDiv.innerText += message + "\n";
-        }
-
         function handleMotion(event){
-            motionDiv.innerText = "X-Axis: " + event.acceleration.x.toFixed(6) + "\n"
-                            + "Y-Axis: " + event.acceleration.y.toFixed(6) + "\n"
-                            + "Z-Axis: " + event.acceleration.z.toFixed(6) + "\n";
+            let x = event.acceleration.x.toFixed(4);
+            if(event.acceleration.x > 0){
+                x = "+" + x;
+            }
+            let y = event.acceleration.y.toFixed(4);
+            if (event.acceleration.y > 0) {
+                y = "+" + y;
+            }
+            let z = event.acceleration.z.toFixed(4);
+            if (event.acceleration.z > 0) {
+                z = "+" + z;
+            }
+            motionDiv.innerText = "X-Axis: " + x + "\n"
+                            + "Y-Axis: " + y + "\n"
+                            + "Z-Axis: " + z + "\n";
         }
 
         function handleOrientation(event){
-            orientationDiv.innerText = "Alpha: " + event.alpha.toFixed(6) + "\n"
-                + "Beta: " + event.beta.toFixed(6) + "\n"
-                + "Gamma: " + event.gamma.toFixed(6) + "\n";
+            let alpha = event.alpha.toFixed(4);
+            if (event.alpha > 0) {
+                alpha = "+" + alpha;
+            }
+            let beta = event.beta.toFixed(4);
+            if (event.beta > 0) {
+                beta = "+" + beta;
+            }
+            let gamma = event.gamma.toFixed(4);
+            if (event.gamma > 0) {
+                gamma = "+" + gamma;
+            }
+            orientationDiv.innerText = "Alpha: " + alpha + "\n"
+                + "Beta: " + beta + "\n"
+                + "Gamma: " + gamma + "\n";
         }
 
         function initialize(){
             motionDiv = document.getElementById("motionData");
             orientationDiv = document.getElementById("orientationData");
-            consoleDiv = document.getElementById("console");
             document.getElementById("permButton").addEventListener("click", getAccPermisions);
         }
         function getAccPermisions(){
@@ -87,7 +102,7 @@
                 }
             }
             catch(error){
-                log(error.message);
+                alert(error.message);
             }
         }
     </script>
