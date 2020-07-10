@@ -31,12 +31,6 @@
             #console{
                 overflow-y: scroll;
             }
-            #motionData{
-                height: 60px;
-            }
-            #orientationData{
-                height: 60px;
-            }
         </style>
     </head>
     <body onload="initialize()" allow="accelerometer">
@@ -57,16 +51,15 @@
         }
 
         function handleMotion(event){
-            motionDiv.innerText = "X-Axis: " + event.acceleration.x + "\n"
-                            + "Y-Axis: " + event.acceleration.y + "\n"
-                            + "Z-Axis: " + event.acceleration.z + "\n";
+            motionDiv.innerText = "X-Axis: " + event.acceleration.x.toFixed(6) + "\n"
+                            + "Y-Axis: " + event.acceleration.y.toFixed(6) + "\n"
+                            + "Z-Axis: " + event.acceleration.z.toFixed(6) + "\n";
         }
 
         function handleOrientation(event){
-            orientationDiv.innerText = "Absolute: " + event.absolute + "\n"
-                + "Alpha: " + event.alpha + "\n"
-                + "Beta: " + event.beta + "\n"
-                + "Gamma: " + event.gamma + "\n";
+            orientationDiv.innerText = "Alpha: " + event.alpha.toFixed(6) + "\n"
+                + "Beta: " + event.beta.toFixed(6) + "\n"
+                + "Gamma: " + event.gamma.toFixed(6) + "\n";
         }
 
         function initialize(){
@@ -76,20 +69,25 @@
             document.getElementById("permButton").addEventListener("click", getAccPermisions);
         }
         function getAccPermisions(){
-            if (DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function") {
-                DeviceMotionEvent.requestPermission();
-            }
+            try{
+                if (DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === "function") {
+                    DeviceMotionEvent.requestPermission();
+                }
 
-            if (is_running) {
-                window.removeEventListener("devicemotion", handleMotion);
-                window.removeEventListener("deviceorientation", handleOrientation);
-                document.getElementById("permButton").innerHTML = "Start Accelerometer Demo";
-                is_running = false;
-            } else {
-                window.addEventListener("devicemotion", handleMotion);
-                window.addEventListener("deviceorientation", handleOrientation);
-                document.getElementById("permButton").innerHTML = "Stop Accelerometer Demo";
-                is_running = true;
+                if (is_running) {
+                    window.removeEventListener("devicemotion", handleMotion);
+                    window.removeEventListener("deviceorientation", handleOrientation);
+                    document.getElementById("permButton").innerHTML = "Start Accelerometer Demo";
+                    is_running = false;
+                } else {
+                    window.addEventListener("devicemotion", handleMotion);
+                    window.addEventListener("deviceorientation", handleOrientation);
+                    document.getElementById("permButton").innerHTML = "Stop Accelerometer Demo";
+                    is_running = true;
+                }
+            }
+            catch(error){
+                log(error.message);
             }
         }
     </script>
